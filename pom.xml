@@ -19,6 +19,9 @@
         <maven.compiler.source>8</maven.compiler.source>
 
         <surefire-plugin.version>2.22.0</surefire-plugin.version>
+	<fabric8.generator.fromMode>istag</fabric8.generator.fromMode>
+        <fabric8.generator.from>openjdk18-openshift</fabric8.generator.from>
+
     </properties>
 
     <dependencyManagement>

@@ -55,6 +55,20 @@
                     </systemProperties>
                 </configuration>
             </plugin>
+  <plugin>
+    <groupId>io.fabric8</groupId>
+    <artifactId>fabric8-maven-plugin</artifactId>
+  <configuration>
+    <authConfig>
+      <pull>
+	<useOpenShiftAuth>true</useOpenShiftAuth>
+      </pull>
+      <push>
+	<useOpenShiftAuth>true</useOpenShiftAuth>
+      </push>
+    </authConfig>
+  </configuration>
+  </plugin>
         </plugins>
     </build>
     <profiles>
@@ -99,6 +113,44 @@
                             </execution>
                         </executions>
                     </plugin>
+          <plugin>
+            <groupId>io.fabric8</groupId>
+            <artifactId>fabric8-maven-plugin</artifactId>
+            <configuration>
+              <verbose>all</verbose>
+              <images>
+                <image>
+                  <name>${docker.org}/barista-http</name>
+                  <build>
+                    <from>registry.fedoraproject.org/fedora-minimal</from>
+                    <tags>
+                      <tag>latest</tag>
+                    </tags>
+                    <ports>
+                      <port>8080</port>
+                    </ports>
+                    <workdir>/work/</workdir>
+                    <entryPoint>
+                      <shell>./application -Dquarkus.http.host=0.0.0.0</shell>
+                    </entryPoint>
+                    <assembly>
+                      <targetDir>/</targetDir>
+                      <inline>
+                        <files>
+                          <file>
+                            <source>${project.basedir}/target/${project.artifactId}-${project.version}-runner</source>
+                            <outputDirectory>/work</outputDirectory>
+                            <fileMode>755</fileMode>
+                            <destName>application</destName>
+                          </file>
+                        </files>
+                      </inline>
+                    </assembly>
+                  </build>
+                </image>
+              </images>
+            </configuration>
+          </plugin>
                 </plugins>
             </build>
         </profile>
